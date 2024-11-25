@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <link rel="icon" href="data:,">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>設定画面</title>
+    <link rel="stylesheet" href="settngs.css">
+</head>
+<body>
+    <h1>設定画面</h1>
+    <div class="settings-container">
+        <button onclick="openProfileSettings()">プロフィール設定</button>
+        <button onclick="openCharacterSettings()">キャラクター変更</button>
+    </div>
+
+    <!-- プロフィール設定フォーム -->
+    <div id="profile-settings" class="profile-settings-container" style="display: none;">
+        <h2>プロフィール変更</h2>
+        <form id="profileForm" onsubmit="saveProfile(event)">
+            <label for="name">名前:</label>
+            <input type="text" id="name" name="name" required><br>
+
+            <label for="gender">性別:</label>
+            <select id="gender" name="gender" required>
+                <option value="male">男性</option>
+                <option value="female">女性</option>
+                <option value="other">その他</option>
+            </select><br>
+
+            <label for="age">年齢:</label>
+            <input type="number" id="age" name="age" required><br>
+
+            <input type="submit" value="保存">
+        </form>
+    </div>
+
+    <!-- キャラクター変更設定フォーム -->
+    <div id="character-settings" class="character-settings-container" style="display: none;">
+        <h2>キャラクター変更</h2>
+        <!-- キャラクター変更フォームの内容をここに追加 -->
+    </div>
+
+    <script src="settings_app.js"></script>
+
+</body>
+</html>

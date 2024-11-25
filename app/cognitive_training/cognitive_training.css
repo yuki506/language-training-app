@@ -1,0 +1,52 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+/* ヘッダーのスタイル */
+h1 {
+    color: #333; /* ヘッダーの文字色 */
+    text-align: center; /* テキストを中央揃え */
+    margin: 0 auto; /* ヘッダーを中央に配置 */
+    margin-bottom: 20px; /* ヘッダーとボタンの間に余白を追加 */
+    padding-top: 20px; /* 上部の余白を追加 */
+    font-size: 24px; /* ヘッダーのフォントサイズ */
+    font-weight: bold; /* ヘッダーを太字に */
+}
+  
+/* CSS */
+
+.button {
+
+  display: inline-block; /* 横並びにする */
+
+  background-color: #4CAF50; /* ベース色 */
+
+  color: white;
+
+  text-align: center;
+
+  padding: 15px;
+
+  margin: 10px; /* ボタン間の余白 */
+
+  border-radius: 50%; /* 丸くする */
+
+  font-size: 18px;
+
+  text-decoration: none;
+
+  transition: background-color 0.3s ease;
+
+}
+
+
+
+.button:hover {
+
+  background-color: #45a049; /* ホバー時の色 */
+
+}

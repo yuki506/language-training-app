@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <link rel="icon" href="data:,">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ユーザー登録</title>
+    <link rel="stylesheet" href="global.css">
+</head>
+<body>
+    <h1>ユーザー登録</h1>
+    <form id="register-form">
+        <label for="username">ユーザー名:</label>
+        <input type="text" id="username" name="username" required>
+        
+        <label for="password">パスワード:</label>
+        <input type="password" id="password" name="password" required>
+        
+        <label for="gender">性別:</label>
+        <select id="gender" name="gender" required>
+            <option value="male">男の子</option>
+            <option value="female">女の子</option>
+            <option value="other">その他</option>
+        </select>
+
+        <label for="age">年齢:</label>
+        <input type="number" id="age" name="age" required min="1">
+
+        <label for="email">メールアドレス:</label>
+        <input type="email" id="email" name="email" required>
+
+        <button type="submit">登録</button>
+    </form>
+
+    <script src="register.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!--ログインページ画面-->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <link rel="icon" href="data:,">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログイン</title>
+    <link rel="stylesheet" href="global.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1 class="login-title">ログイン画面</h1>
+        <form id="login-form" action="/login" method="POST">
+            <label for="username">ユーザーID:</label>
+            <input type="text" id="username" name="username" required>
+            
+            <label for="password">パスワード:</label>
+            <input type="password" id="password" name="password" required>
+            
+            <button type="submit">ログイン</button>
+        </form>
+    </div>
+    <script src="login.js"></script>
+</body>
+</html>

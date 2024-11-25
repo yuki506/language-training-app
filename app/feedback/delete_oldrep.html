@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <link rel="icon" href="data:,">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>古いレポートの削除</title>
+    <link rel="stylesheet" href="/feedback.css"> <!-- CSSの読み込み -->
+</head>
+<body>
+    <h2>古いレポートを削除</h2>
+
+    <!-- 削除フォーム -->
+    <form method="POST" action="/delete-old-reports">
+        <button id="delete-button">3か月前のレポートを削除する</button>
+    </form>
+
+    <!-- JavaScriptファイルの読み込み -->
+    <script src="/generate_progress.js"></script>
+    <script src="/delete_oldrep.js"></script>
+</body>
+</html>

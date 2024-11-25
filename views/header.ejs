@@ -1,0 +1,68 @@
+<header>
+    <div class="menu-button">
+        <!-- メニューボタンとリンク -->
+        <button id="menuButton">☰ Menu</button>
+        <div id="menuDropdown" style="display:none;">
+            <a href="#" id="settingsLink">設定</a>
+            <a href="#" id="logoutLink">ログアウト</a>
+        </div>
+    </div>
+    <link rel="stylesheet" href="/public/header.css">
+</header>
+
+<script nonce="<%= nonce %>">
+    function toggleMenu() {
+        const menu = document.getElementById('menuDropdown');
+        menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function goToSettings() {
+        console.log("setting画面のボタンがクリックされた。");
+        window.location.href = '/app/settings/settings.html';
+    }
+
+    async function logout() {
+        console.log("ログアウトボタンがクリックされました"); // デバッグ用ログ
+        try {
+            console.log("fetchで'/api/logout'を呼び出します"); // デバッグ用ログ
+            const response = await fetch('/api/logout', {
+                method: 'POST',
+                credentials: 'same-origin'
+            });
+            if (response.ok) {
+                console.log("ログアウトに成功しました。サーバーのレスポンス:", await response.json()); // レスポンスをログ出力
+                window.location.href = '/public/index.html'; // ログイン画面にリダイレクト
+            } else {
+                console.error("ログアウト失敗。サーバーからのステータス:", response.status); // ステータスコードをログ出力
+                alert('ログアウトに失敗しました');
+            }
+        } catch (error) {
+            console.error('ログアウト中にエラーが発生:', error);
+            alert('ログアウト中にエラーが発生しました');
+        }
+    }
+
+    // イベントリスナーを追加
+    document.addEventListener("DOMContentLoaded", () => {
+        console.log("DOMContentLoaded イベントが発火しました");
+
+        // 要素の取得
+        const menuButton = document.getElementById('menuButton');
+        const settingsLink = document.getElementById('settingsLink');
+        const logoutLink = document.getElementById('logoutLink');
+
+        if (menuButton && settingsLink && logoutLink) {
+            console.log("メニューボタン、設定リンク、ログアウトリンクが見つかりました");
+
+            menuButton.addEventListener('click', toggleMenu);
+            settingsLink.addEventListener('click', goToSettings);
+
+            logoutLink.addEventListener('click', () => {
+                console.log("ログアウトボタンがクリックされました");
+                logout();
+            });
+        } else {
+            console.error("ボタンまたはリンクの要素が見つかりません");
+        }
+    });
+</script>

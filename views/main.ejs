@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <link rel="icon" href="data:,">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メインメニュー</title>
+    <link rel="stylesheet" href="app/app.css">
+    <script src="/app/main.js"></script>
+    <!--<script src="language_training/language_training_script.js"></script>--> <!-- ユーザープロフィール取得用のスクリプト -->
+</head>
+<body>
+    <%- include('header') %>  <!-- 共通のヘッダ -->
+    <div class="button-container">
+        <!-- 上段の4つのボタン -->
+        <a href="/app/language_training/language_training.html" class="round-button">言語学習</a>
+        <a href="/app/cognitive_training/cognitive_training.html" class="round-button">認知学習</a>
+        <a href="/app/emotion_recognition/emotion_recognition.html" class="round-button">感情認識</a>
+        <a href="/app/settings/settings.html" class="round-button">設定</a>
+
+        <!-- 下段の3つのボタン -->
+        <a href="/app/game_based_learning/game_based_learning.html" class="round-button">ゲーム学習</a>
+        <a href="/app/language_test/language_test.html" class="round-button">自然言語訓練</a>
+        <a href="/app/feedback/progress.html" class="round-button">フィードバック</a>
+    </div>
+    <script>
+
+        // 戻るボタンの無効化
+    
+        history.pushState(null, null, location.href);
+    
+        window.onpopstate = function () {
+    
+            history.go(1);
+    
+        };
+    
+    </script>
+
+    <!-- ユーザープロフィールを取得するスクリプト -->
+    <!--<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetchUserProfile();
+        });
+        let userId;
+        function fetchUserProfile() {
+            fetch(`/api/profile/${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("ユーザープロフィール:", data);
+                    // 必要に応じて、ユーザー情報に基づいた処理をここに追加できます。
+                })
+                .catch(error => {
+                    console.error("ユーザープロフィールの取得エラー:", error);
+                });
+        }
+    </script>-->
+</body>
+</html>

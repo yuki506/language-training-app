@@ -1,0 +1,62 @@
+<!-- **役割**: ユーザーインターフェースを提供し、ストーリーの追加やファイルのアップロードを行うページです。 -->
+<!--  **機能** -->
+<!-- ストーリー追加フォーム -->
+<!-- ファイルアップロードフォーム -->
+<!-- スクリプトの読み込み -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <link rel="icon" href="data:,">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Skill Training</title>
+    <link rel="stylesheet" href="social_skill.css">
+</head>
+<body>
+    <h1>ソーシャルスキルトレーニング</h1>
+
+    <div>
+        <h2>ストーリーを追加</h2>
+        <form id="story-form">
+            <input type="text" id="story-title" placeholder="ストーリーのタイトル"><br><br>
+            <textarea id="story-content" placeholder="ストーリーの内容"></textarea><br><br>
+            <button type="submit">ストーリーを追加</button>
+        </form>
+    </div>
+
+    <div id="stories">
+        <!-- 保存されたストーリーズがここに表示される -->
+    </div>
+
+    <div>
+        <h2>ファイルをアップロード</h2>
+        <form id="upload-form" enctype="multipart/form-data">
+            <label for="file">キャラクターまたは動画をアップロード:</label>
+            <input type="file" id="file-upload" name="file" multiple>
+            <button type="submit">アップロード</button>
+        </form>
+         <!-- アップロードされたファイルリストを表示する場所 -->
+         <ul id="uploaded-files-list"></ul>
+        <!-- <li><img src="/uploads/narabu.jpg" alt="narabu.jpg width="100"></li>-->
+    </div>
+
+        <!-- プロフィール取得ボタン -->
+        <button id="get-profile-btn">プロフィールを取得</button><br /><br />
+        <div id="username-display"></div>
+        <div id="level-display"></div>
+
+        <!-- 進捗取得ボタン -->
+        <button id="get-progress-btn">進捗を取得</button><br /><br />
+        <div id="progress-display"></div>
+
+        <!-- 進捗更新ボタン -->
+        <button id="update-progress-btn">進捗を更新</button><br /><br />
+
+        <!-- ストーリー生成ボタン -->
+        <button id="generate-story-btn">ストーリーを生成</button><br /><br />
+        <h3 id="generated-story-title"></h3>
+        <p id="generated-story-content"></p>
+
+    <script src="social_skill_script.js"></script>
+</body>
+</html>

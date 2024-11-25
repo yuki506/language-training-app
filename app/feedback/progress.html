@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <link rel="icon" href="data:,">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>子どもの進捗確認</title>
+    <link rel="stylesheet" href="feedback.css"> <!-- CSSの読み込み -->
+</head>
+<body>
+    <form id="report-form" method="post" action="/api/progress-report">
+        <select id="period" name="period">
+            <option value="-7 days">1週間</option>
+            <option value="-1 month">1ヶ月</option>    
+            <option value="-1 year">1年</option>    
+        </select>    
+        <button type="submit">進捗レポートを作成</button>
+    </form>
+    <h2>子どもの進捗</h2>
+    <!-- 進捗データ表示のテーブル -->
+    <table id="progress-table">
+        <thead>
+            <tr>
+                <th>日付</th>
+                <th>強み</th>
+                <th>弱み</th>
+                <th>進捗率</th>
+                <th>提案</th>
+            </tr>
+        </thead>
+        <tbody id="progress-table-body">
+            <!-- データがここに挿入される -->
+        </tbody>
+    </table>
+    <div id="progress-data"></div> <!-- メッセージ表示用 -->
+    <!-- JavaScriptファイルの読み込み -->
+    <script src="/generate_progress.js"></script>
+</body>
+</html>

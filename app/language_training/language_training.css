@@ -1,0 +1,140 @@
+/* 全体のスタイル */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* 言語訓練プログラムタイトル */
+h1 {
+    color: #333;
+    text-align: center;
+}
+
+/* スタートボタン */
+#start-button {
+    padding: 10px 20px;
+    background-color: #007bff; /* ブルー */
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+#start-button:hover {
+    background-color: #0056b3;
+}
+
+/* ファイルアップロードセクション */
+#file-upload-section {
+    background-color: #d3d3d3; /* グレー */
+    border: 2px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+    position: absolute; /* 絶対配置にする */
+    top: 10px;          /* 上から10pxの位置 */
+    left: 10px;         /* 左から10pxの位置 */
+    width: 250px;
+    text-align: left;
+}
+
+#file-upload-section h2 {
+    font-size: 16px;
+}
+
+#file-upload-section label {
+    font-weight: bold;
+}
+
+#file-upload-section input[type="file"],
+#file-upload-section select {
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+#upload-btn {
+    background-color: #28a745; /* グリーン */
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    width: 100%;
+}
+
+#upload-btn:hover {
+    background-color: #218838;
+}
+
+/* フラッシュカード */
+#flashcard-container img {
+    max-width: 300px;
+    max-height: 300px;
+    margin-bottom: 10px;
+}
+
+/* クイズセクション */
+#quiz-section {
+    display: none;
+    margin-top: 20px;
+    text-align: center;
+}
+
+#quiz-section img {
+    max-width: 300px;
+    max-height: 300px;
+    margin-bottom: 10px;
+}
+
+#quiz-answer {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+#submit-answer {
+    padding: 10px 20px;
+    background-color: #28a745; /* グリーン */
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#submit-answer:hover {
+    background-color: #218838;
+}
+
+#next-question-btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #007bff; /* ブルー */
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#next-question-btn:hover {
+    background-color: #0056b3;
+}
+
+#end-quiz-button {
+    background-color: #FF6347; /* トマト色、終了の意図を強調 */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+#end-quiz-button:hover {
+    background-color: #FF4500; /* マウスオーバーで濃い色に */
+}

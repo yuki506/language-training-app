@@ -1,0 +1,37 @@
+.menu-button {
+    position: absolute;
+    top: 10px; /* 上からの距離 */
+    right: 10px; /* 右からの距離 */
+    z-index: 1000; /* 他の要素よりも前面に表示 */
+}
+
+.menu-button button {
+    font-size: 24px;
+    background-color: green; /* 希望する緑色を設定 */
+    color: white; /* 必要に応じて文字色を調整 */
+    border: none;
+    padding: 10px; /* 必要に応じて余白を調整 */
+    border-radius: 5px; /* ボタンの角を丸くしたい場合に使用 */
+    cursor: pointer; /* ボタンらしいカーソル表示 */
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 40px;
+    right: 10px;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-menu a, .dropdown-menu button {
+    display: block;
+    padding: 5px 10px;
+    color: black;
+    text-decoration: none;
+}
+
+.dropdown-menu a:hover, .dropdown-menu button:hover {
+    background-color: #f0f0f0;
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <link rel="icon" href="data:,">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Training</title>
+    <link rel="stylesheet" href="language_training.css">
+</head>
+<body>
+<h1 id="training-title">言語訓練プログラム</h1>
+
+<!-- スタートセクション -->
+<div id="start-container">
+    <button id="start-button">Start</button>
+</div>
+
+<!-- フラッシュカードセクション -->
+<div id="flashcard-container" style="display: none;"></div>
+
+<!-- ファイルアップロードセクション -->
+<div id="file-upload-section">
+    <form id="upload-form" enctype="multipart/form-data">
+        <h2>＜画像アップロード＞</h2>
+        <label for="file-upload">ファイルを選択:</label>
+        <input type="file" id="file-upload" name="files" multiple>
+        <label for="category-select">カテゴリーを選択:</label>
+        <select id="category-select" name="category">
+            <option value="noun">名詞</option>
+            <option value="actions">動詞</option>
+            <option value="adjectives">形容詞</option>
+            <option value="emotions">感情</option>   
+            <option value="shapes">形</option>
+
+        </select><!-- 以下を追加: サブカテゴリー選択用 -->
+        <label for="subcategory-select">サブカテゴリーを選択:</label>
+        <select id="subcategory-select" name="subcategory">
+            <option value="">サブカテゴリーを選択してください</option>
+        </select>
+        
+        <!-- レベル選択プルダウン追加 -->
+        <label for="level-select">レベルを選択:</label>
+        <select id="level-select" name="level">
+            <option value="初級">初級</option>            
+            <option value="中級">中級</option>
+            <option value="上級">上級</option>
+            <option value="超上級">超上級</option> 
+            
+            <!-- 追加 -->
+        </select>
+        
+        <button type="button" id="upload-btn">アップロード</button>
+    </form>
+</div>
+
+<!-- クイズセクション -->
+<div id="quiz-section" class="quiz-section" style="display: none;">
+    <h2>クイズセクション</h2>
+    <p id="quiz-question"></p>
+    <div id="quiz-image-container"></div>
+    <input type="text" id="quiz-answer" placeholder="答えを入力してください">
+    <button id="submit-answer">回答する</button>
+    <button id="next-question-btn" style="display: none;">次の問題へ進む</button> <!-- 新しいボタン -->
+    <button id="end-quiz-button">クイズ終了</button>
+    <div id="quiz-timer"></div>
+</div>
+
+<!-- クイズの結果表示 -->
+<div id="quiz-result-container" style="display: none;">
+    <h2>結果:</h2>
+    <p id="result">ここにクイズの結果が表示されます。</p>
+</div>
+
+<!-- ポイントと進捗表示 -->
+<div id="progress-container" style="display: none;">
+    <h2>進捗状況:</h2>
+    <div id="progress-points">ポイント</div>
+    <!--<p id="badge-status">獲得バッジ:<span id="reward-badge"></span></p>-->
+</div>
+
+<!-- メダル表示エリア -->
+<div id="medal-container" style="display: none;">
+    <h2>獲得メダル</h2>
+    <div id="medals"></div> <!-- ここにメダル画像を追加 -->
+</div>
+
+<script src="language_training_script.js"></script>
+</body>
+</html>
