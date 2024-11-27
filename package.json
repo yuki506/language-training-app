@@ -1,9 +1,9 @@
 {
-  "name": "language-training-software",
+  "name": "language-training-app",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "nps"
+    "start": "node server.cjs"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -22,7 +22,6 @@
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
-    "nps": "^5.10.0",
     "nps-utils": "^1.0.2"
   },
   "keywords": [],

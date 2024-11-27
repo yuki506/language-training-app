@@ -3,8 +3,8 @@
 // APIエンドポイント
 // ファイルアップロード
 // データベース処理
-const dotenv = require('dotenv');
-dotenv.config();  // dotenvを読み込む
+//const dotenv = require('dotenv');
+//dotenv.config();  // dotenvを読み込む
 const OpenAI = require('openai');
 const express = require('express');
 const session = require('express-session');
@@ -1275,5 +1275,5 @@ app.get('/api/get-flashcards', (req, res) => {
 
 // サーバーの起動
 app.listen(port, () => {
-    console.log(`Server is running on [http://localhost:${port}`);
+  console.log(`Server is running on https://localhost:${port}`);
 });
