@@ -86,20 +86,26 @@ app.get('/favicon.ico', (req, res) => res.status(204));
 // 本番環境でPostgreSQL、ローカル環境でSQLiteを使用
 let db;
 if (process.env.DATABASE_URL) {
-  // 本番環境（Herokuなど）ではPostgreSQLを使用
-  const { Pool } = require('pg');
-  const pool = new Pool({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT,
-  });
-  db = pool;
+    // 本番環境 (PostgreSQL)
+    const { Pool } = require('pg');
+    const connectionString = process.env.DATABASE_URL;
+    const pool = new Pool({
+        connectionString: connectionString,
+        ssl: { rejectUnauthorized: false } // Heroku の PostgreSQL では SSL 接続が必要
+    });
+
+    db = pool;
+    console.log('PostgreSQLに接続しました');
 } else {
-  // ローカル開発環境ではSQLiteを使用
-  const sqlite3 = require('sqlite3').verbose();
-  db = new sqlite3.Database('./database.sqlite');  // SQLite接続
+    // ローカル環境 (SQLite)
+    const sqlite3 = require('sqlite3').verbose();
+    db = new sqlite3.Database('./database.sqlite', sqlite3.OPEN_READWRITE, (err) => {
+        if (err) {
+            console.error('SQLite接続エラー:', err);
+        } else {
+            console.log('SQLiteに接続しました');
+        }
+    });
 }
 
 // PostgreSQL接続の設定
