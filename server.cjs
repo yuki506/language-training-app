@@ -14,6 +14,7 @@ const bcrypt = require('bcrypt');
 const natural = require('natural'); //類似性
 const plainPassword = "req.body.password";  // ハッシュ化したいパスワード
 const sqlite3 = require('sqlite3').verbose();
+const { Pool } = require('pg'); // PostgreSQLのPoolをインポート
 const multer = require('multer');
 const path = require('path');
 const helmet = require('helmet');
