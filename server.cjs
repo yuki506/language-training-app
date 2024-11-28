@@ -102,6 +102,24 @@ if (process.env.DATABASE_URL) {
   db = new sqlite3.Database('./database.sqlite');  // SQLite接続
 }
 
+// PostgreSQL接続の設定
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL, // Herokuの環境変数DATABASE_URLを使用
+    ssl: {
+      rejectUnauthorized: false // HerokuではSSLを使う設定が必要な場合がある
+    }
+  });
+
+  // データベース接続確認
+pool.connect()
+.then(client => {
+  console.log("Successfully connected to PostgreSQL");
+  client.release(); // 接続後は必ずreleaseを呼び出す
+})
+.catch(err => {
+  console.error("Error connecting to PostgreSQL:", err); // エラーをキャッチして表示
+});
+
 // ポート番号の設定
 const port = process.env.PORT || 3000;
 
