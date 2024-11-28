@@ -191,6 +191,7 @@ app.use('/public', express.static(path.join(__dirname, 'public'), {
 // データベース初期化（SQLiteの書き換え）
 async function initializeDatabase() {
     if (db instanceof sqlite3.Database) {
+        console.log("SQLiteデータベースの初期化を開始します...");
         // SQLite用のテーブル作成処理
         db.serialize(() => {
             db.run(`CREATE TABLE IF NOT EXISTS users (
@@ -249,7 +250,7 @@ async function initializeDatabase() {
             
             // 進捗管理テーブル
             db.run(`CREATE TABLE IF NOT EXISTS progress (
-                user_id INTEGER PRIMARY KEY,
+                user_id INTEGER,
                 story_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 level TEXT DEFAULT '初級',
                 points INTEGER DEFAULT 0,
@@ -290,7 +291,10 @@ async function initializeDatabase() {
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             )`);
         });
-    } else {
+        console.log("SQLiteデータベースの初期化が完了しました。");
+    } else if (db instanceof Pool) {
+        // PostgreSQL用のテーブル作成処理
+        console.log("PostgreSQLデータベースの初期化を開始します...");
         // PostgreSQL用のテーブル作成処理
         const client = await db.connect();
         try {
@@ -355,7 +359,7 @@ async function initializeDatabase() {
             // 進捗管理テーブル
             await client.query(`
                 CREATE TABLE IF NOT EXISTS progress (
-                user_id INTEGER PRIMARY KEY,
+                user_id INTEGER,
                 story_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 level TEXT DEFAULT '初級',
                 points INTEGER DEFAULT 0,
@@ -399,6 +403,8 @@ async function initializeDatabase() {
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
                 )
             `);
+
+            console.log("PostgreSQLデータベースの初期化が完了しました。");
 
         } catch (err) {
             console.error('PostgreSQLテーブル作成エラー:', err);
