@@ -47,7 +47,7 @@ db.run(`
 
   CREATE TABLE IF NOT EXISTS profiles (
 
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id SERIAL PRIMAY KEY,
 
     name TEXT NOT NULL,
 
