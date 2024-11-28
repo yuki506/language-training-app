@@ -188,105 +188,234 @@ app.use('/public', express.static(path.join(__dirname, 'public'), {
     }
 }));
 
-// データベース初期化
-db.serialize(() => {
-    db.run(`CREATE TABLE IF NOT EXISTS users (
-        user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
-        gender TEXT,
-        age INTEGER,
-        email TEXT UNIQUE NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`);
-    db.run(`CREATE TABLE IF NOT EXISTS social_stories (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT NOT NULL,
-        content TEXT NOT NULL
-    )`);
-    db.run(`CREATE TABLE IF NOT EXISTS media_files (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        file_name TEXT NOT NULL,
-        file_type TEXT NOT NULL,
-        file_path TEXT NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`);
+// データベース初期化（SQLiteの書き換え）
+async function initializeDatabase() {
+    if (db instanceof sqlite3.Database) {
+        // SQLite用のテーブル作成処理
+        db.serialize(() => {
+            db.run(`CREATE TABLE IF NOT EXISTS users (
+                user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL,
+                gender TEXT,
+                age INTEGER,
+                email TEXT UNIQUE NOT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )`);
+            db.run(`CREATE TABLE IF NOT EXISTS social_stories (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT NOT NULL,
+                content TEXT NOT NULL
+            )`);
+            db.run(`CREATE TABLE IF NOT EXISTS media_files (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                file_name TEXT NOT NULL,
+                file_type TEXT NOT NULL,
+                file_path TEXT NOT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )`);
 
-    // カテゴリーテーブル
-    db.run(`
-        CREATE TABLE IF NOT EXISTS categories (
-        id INTEGER PRIMARY KEY,
-        name TEXT NOT NULL
-        )
-    `);
+            // カテゴリーテーブル
+            db.run(`
+                CREATE TABLE IF NOT EXISTS categories (
+                id INTEGER PRIMARY KEY,
+                name TEXT NOT NULL
+                )
+            `);
 
-    // サブカテゴリーテーブル
-    db.run(`
-        CREATE TABLE IF NOT EXISTS subcategories (
-        id INTEGER PRIMARY KEY,
-        name TEXT NOT NULL,
-        parent_id INTEGER NOT NULL,
-        FOREIGN KEY (parent_id) REFERENCES categories (id)
-        )
-    `);
+            // サブカテゴリーテーブル
+            db.run(`
+                CREATE TABLE IF NOT EXISTS subcategories (
+                id INTEGER PRIMARY KEY,
+                name TEXT NOT NULL,
+                parent_id INTEGER NOT NULL,
+                FOREIGN KEY (parent_id) REFERENCES categories (id)
+                )
+            `);
 
-     // フラッシュカードテーブル（カラム追加対応済み）
-    db.run(`
-        CREATE TABLE IF NOT EXISTS flashcards (
-        id INTEGER PRIMARY KEY,
-        text TEXT NOT NULL,
-        image TEXT NOT NULL,
-        category TEXT NOT NULL,
-        subcategory_id INTEGER,
-        level TEXT NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (subcategory_id) REFERENCES subcategories (id)
-        )
-    `);
-    
-    // 進捗管理テーブル
-    db.run(`CREATE TABLE IF NOT EXISTS progress (
-        user_id INTEGER PRIMARY KEY,
-        story_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        level TEXT DEFAULT '初級',
-        points INTEGER DEFAULT 0,
-        badges TEXT,
-        medals INTEGER,
-        completed_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`);
-    
-    // クイズ質問テーブル
-    db.run(`CREATE TABLE IF NOT EXISTS quiz_questions (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        question_id INTEGER,
-        question_text TEXT NOT NULL,
-        category TEXT,
-        difficulty_level TEXT,
-        correct_answer TEXT NOT NULL
-    )`);
-    
-    // ユーザーのクイズ回答履歴
-    db.run(`CREATE TABLE IF NOT EXISTS quiz_answers (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        question_id INTEGER,
-        user_answer TEXT NOT NULL,
-        is_correct BOOLEAN,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`);
+            // フラッシュカードテーブル（カラム追加対応済み）
+            db.run(`
+                CREATE TABLE IF NOT EXISTS flashcards (
+                id INTEGER PRIMARY KEY,
+                text TEXT NOT NULL,
+                image TEXT NOT NULL,
+                category TEXT NOT NULL,
+                subcategory_id INTEGER,
+                level TEXT NOT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (subcategory_id) REFERENCES subcategories (id)
+                )
+            `);
+            
+            // 進捗管理テーブル
+            db.run(`CREATE TABLE IF NOT EXISTS progress (
+                user_id INTEGER PRIMARY KEY,
+                story_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                level TEXT DEFAULT '初級',
+                points INTEGER DEFAULT 0,
+                badges TEXT,
+                medals INTEGER,
+                completed_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )`);
+            
+            // クイズ質問テーブル
+            db.run(`CREATE TABLE IF NOT EXISTS quiz_questions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                question_id INTEGER,
+                question_text TEXT NOT NULL,
+                category TEXT,
+                difficulty_level TEXT,
+                correct_answer TEXT NOT NULL
+            )`);
+            
+            // ユーザーのクイズ回答履歴
+            db.run(`CREATE TABLE IF NOT EXISTS quiz_answers (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                question_id INTEGER,
+                user_answer TEXT NOT NULL,
+                is_correct BOOLEAN,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )`);
 
-    //進捗レポート
-    db.run(`CREATE TABLE IF NOT EXISTS progress_reports (
-        report_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        report_date DATETIME,
-        strengths TEXT,
-        weaknesses TEXT,
-        suggestions TEXT,
-        progress_percentage INTEGER,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`);
-});
+            //進捗レポート
+            db.run(`CREATE TABLE IF NOT EXISTS progress_reports (
+                report_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                report_date DATETIME,
+                strengths TEXT,
+                weaknesses TEXT,
+                suggestions TEXT,
+                progress_percentage INTEGER,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )`);
+        });
+    } else {
+        // PostgreSQL用のテーブル作成処理
+        const client = await db.connect();
+        try {
+            await client.query(`
+                CREATE TABLE IF NOT EXISTS users (
+                    user_id SERIAL PRIMARY KEY,
+                    username TEXT UNIQUE NOT NULL,
+                    password TEXT NOT NULL,
+                    gender TEXT,
+                    age INTEGER,
+                    email TEXT UNIQUE NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            `);
+
+            await client.query(`
+                CREATE TABLE IF NOT EXISTS social_stories (
+                    id SERIAL PRIMARY KEY,
+                    title TEXT NOT NULL,
+                    content TEXT NOT NULL
+                )
+            `);
+
+            await client.query(`
+                CREATE TABLE IF NOT EXISTS media_files (
+                    id SERIAL PRIMARY KEY,
+                    file_name TEXT NOT NULL,
+                    file_type TEXT NOT NULL,
+                    file_path TEXT NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            `);
+            // カテゴリーテーブル
+            await client.query(`
+                CREATE TABLE IF NOT EXISTS categories (
+                id INTEGER PRIMARY KEY,
+                name TEXT NOT NULL
+                )
+            `);
+            // サブカテゴリーテーブル
+            await client.query(`
+                CREATE TABLE IF NOT EXISTS subcategories (
+                id INTEGER PRIMARY KEY,
+                name TEXT NOT NULL,
+                parent_id INTEGER NOT NULL,
+                FOREIGN KEY (parent_id) REFERENCES categories (id)
+                )
+            `);
+            // フラッシュカードテーブル（カラム追加対応済み）
+            await client.query(`
+                CREATE TABLE IF NOT EXISTS flashcards (
+                id INTEGER PRIMARY KEY,
+                text TEXT NOT NULL,
+                image TEXT NOT NULL,
+                category TEXT NOT NULL,
+                subcategory_id INTEGER,
+                level TEXT NOT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (subcategory_id) REFERENCES subcategories (id)
+                )
+            `);
+            // 進捗管理テーブル
+            await client.query(`
+                CREATE TABLE IF NOT EXISTS progress (
+                user_id INTEGER PRIMARY KEY,
+                story_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                level TEXT DEFAULT '初級',
+                points INTEGER DEFAULT 0,
+                badges TEXT,
+                medals INTEGER,
+                completed_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )
+            `);
+            // クイズ質問テーブル
+            await client.query(`
+                CREATE TABLE IF NOT EXISTS quiz_questions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                question_id INTEGER,
+                question_text TEXT NOT NULL,
+                category TEXT,
+                difficulty_level TEXT,
+                correct_answer TEXT NOT NULL
+                )
+            `);
+            // ユーザーのクイズ回答履歴
+            await client.query(`
+                CREATE TABLE IF NOT EXISTS quiz_answers (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                question_id INTEGER,
+                user_answer TEXT NOT NULL,
+                is_correct BOOLEAN,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )
+            `);
+            //進捗レポート
+            await client.query(`
+                CREATE TABLE IF NOT EXISTS progress_reports (
+                report_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER,
+                report_date DATETIME,
+                strengths TEXT,
+                weaknesses TEXT,
+                suggestions TEXT,
+                progress_percentage INTEGER,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )
+            `);
+
+        } catch (err) {
+            console.error('PostgreSQLテーブル作成エラー:', err);
+        } finally {
+            client.release();
+        }
+    }
+}
+
+// データベースの初期化呼び出す
+initializeDatabase()
+    .then(() => {
+        console.log("データベース初期化完了");
+    })
+    .catch((err) => {
+        console.error("データベース初期化エラー:", err);
+    });
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ユーザー登録エンドポイント
 app.post('/register', (req, res) => {
@@ -1310,7 +1439,5 @@ app.get('/api/get-flashcards', (req, res) => {
 
 // サーバーの起動
 app.listen(port, () => {
-
-
   console.log(`Server is running on https://localhost:${port}`);
 });
