@@ -44,16 +44,27 @@ app.use((req, res, next) => {
     next();
 });
 
+//httpsの強制
+if (process.env.NODE_ENV === 'production') {
+    app.use((req, res, next) => {
+      // HTTPの場合はHTTPSにリダイレクト
+      if (req.protocol === 'http') {
+        return res.redirect(301, `https://${req.headers.host}${req.url}`);
+      }
+      next();
+    });
+  }
+  
 // HelmetでCSPを設定
 app.use(
     helmet({
         contentSecurityPolicy: {
             directives: {
                 defaultSrc: ["'self'"],
-                scriptSrc: ["'self'", "'unsafe-inline'", "http://localhost:3000"],
+                scriptSrc: ["'self'", "'unsafe-inline'", "https://language-training-app.herokuapp.com"],
                 styleSrc: ["'self'", "'unsafe-inline'"],
-                imgSrc: ["'self'", "data:", "http://localhost:3000"],
-                connectSrc: ["'self'", "http://localhost:3000"],
+                imgSrc: ["'self'", "data:", "https://language-training-app.herokuapp.com"],
+                connectSrc: ["'self'", "https://language-training-app.herokuapp.com"],
                 fontSrc: ["'self'", "https://fonts.gstatic.com"],
                 objectSrc: ["'none'"],
                 upgradeInsecureRequests: [],
@@ -72,7 +83,14 @@ app.use(
 app.get('/favicon.ico', (req, res) => res.status(204));
 
 // データベースの接続
-const db = new sqlite3.Database('./database.sqlite'); // データベース接続
+const { Pool } = require('pg');  // PostgreSQLのクライアントを使用
+const pool = new Pool({
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
+});
 
 // ポート番号の設定
 const port = process.env.PORT || 3000;
@@ -80,15 +98,20 @@ const port = process.env.PORT || 3000;
 // ランダムな秘密キーを生成
 const secretKey = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
 console.log(secretKey); // コンソールに生成されたキーが表示される
+// 不正な文字（スラッシュや特殊文字）を除去する関数
 
-//セッション管理
-app.use(session({
+function sanitizeKey(key) {
+    return key.replace(/[^A-Za-z0-9_]/g, ''); // アルファベット、数字、アンダースコア以外を削除
+  }
+  const sanitizedSecretKey = sanitizeKey(secretKey);
+//セッション管理  
+  app.use(session({
     store: new SQLiteStore({ db: 'sessions.sqlite', dir: './sessions' }),
-    secret: secretKey,
+    secret: sanitizedSecretKey, // 修正されたシークレットキーを使用
     resave: false,
-    saveUninitialized: false,  
-    cookie: { secure: process.env.NODE_ENV === 'production', maxAge: 20 * 60 * 1000 }, // 本番環境ではsecureをtrueに
-}));
+    saveUninitialized: false,
+    cookie: { secure: process.env.NODE_ENV === 'production', maxAge: 20 * 60 * 1000 },
+  }));
 
 //ログインしているか確認するAPI
 // API認証チェック
@@ -102,7 +125,10 @@ app.get('/api/check-auth', (req, res) => {
 });
 
 //ミドルウェア
-app.use(cors());
+app.use(cors({
+    origin: 'https://language-training-app.herokuapp.com',  // 本番環境のURLを指定
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  }));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));  // URLエンコードされたデータを解析
@@ -1275,5 +1301,7 @@ app.get('/api/get-flashcards', (req, res) => {
 
 // サーバーの起動
 app.listen(port, () => {
+
+
   console.log(`Server is running on https://localhost:${port}`);
 });
