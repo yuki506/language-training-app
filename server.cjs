@@ -226,7 +226,7 @@ async function initializeDatabase() {
                 gender TEXT,
                 age INTEGER,
                 email TEXT UNIQUE NOT NULL,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )`);
             db.run(`CREATE TABLE IF NOT EXISTS social_stories (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -238,7 +238,7 @@ async function initializeDatabase() {
                 file_name TEXT NOT NULL,
                 file_type TEXT NOT NULL,
                 file_path TEXT NOT NULL,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )`);
 
             // カテゴリーテーブル
@@ -268,7 +268,7 @@ async function initializeDatabase() {
                 category TEXT NOT NULL,
                 subcategory_id INTEGER,
                 level TEXT NOT NULL,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (subcategory_id) REFERENCES subcategories (id)
                 )
             `);
@@ -281,7 +281,7 @@ async function initializeDatabase() {
                 points INTEGER DEFAULT 0,
                 badges TEXT,
                 medals INTEGER,
-                completed_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )`);
             
             // クイズ質問テーブル
@@ -301,19 +301,19 @@ async function initializeDatabase() {
                 question_id INTEGER,
                 user_answer TEXT NOT NULL,
                 is_correct BOOLEAN,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )`);
 
             //進捗レポート
             db.run(`CREATE TABLE IF NOT EXISTS progress_reports (
                 report_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER,
-                report_date DATETIME,
+                report_date TIMESTAMP,
                 strengths TEXT,
                 weaknesses TEXT,
                 suggestions TEXT,
                 progress_percentage INTEGER,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )`);
         });
         console.log("SQLiteデータベースの初期化が完了しました。");
@@ -377,7 +377,7 @@ async function initializeDatabase() {
                 category TEXT NOT NULL,
                 subcategory_id INTEGER,
                 level TEXT NOT NULL,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (subcategory_id) REFERENCES subcategories (id)
                 )
             `);
@@ -390,7 +390,7 @@ async function initializeDatabase() {
                 points INTEGER DEFAULT 0,
                 badges TEXT,
                 medals INTEGER,
-                completed_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             `);
             // クイズ質問テーブル
@@ -412,7 +412,7 @@ async function initializeDatabase() {
                 question_id INTEGER,
                 user_answer TEXT NOT NULL,
                 is_correct BOOLEAN,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             `);
             //進捗レポート
@@ -420,12 +420,12 @@ async function initializeDatabase() {
                 CREATE TABLE IF NOT EXISTS progress_reports (
                 report_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER,
-                report_date DATETIME,
+                report_date TIMESTAMP,
                 strengths TEXT,
                 weaknesses TEXT,
                 suggestions TEXT,
                 progress_percentage INTEGER,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             `);
 
@@ -459,7 +459,7 @@ app.post('/register', (req, res) => {
         }
 
         // ユーザー情報をデータベースに挿入
-        db.run("INSERT INTO users (username, password, gender, age, email, created_at) VALUES (?, ?, ?, ?, ?, datetime('now'))",
+        db.run("INSERT INTO users (username, password, gender, age, email, created_at) VALUES (?, ?, ?, ?, ?, ('now'))",
             [username, hashedPassword, gender, age, email], 
             function(err) {
                 if (err) {
@@ -1198,7 +1198,7 @@ app.post('/api/submit-quiz-answer', (req, res) => {
 
             // クイズ回答を保存
             db.run(
-                "INSERT INTO quiz_answers (user_id, question_id, user_answer, is_correct, created_at) VALUES (?, ?, ?, ?, datetime('now'))",
+                "INSERT INTO quiz_answers (user_id, question_id, user_answer, is_correct, created_at) VALUES (?, ?, ?, ?, timestamp('now'))",
                 [user_id, question_id, userAnswer, isCorrect ? 1 : 0],
                 (err) => {
                     if (err) {
@@ -1277,7 +1277,7 @@ app.post('/api/progress-report', (req, res) => {
         JOIN quiz_questions qq ON qa.question_id = qq.id
         WHERE qa.user_id = ${user_id}
 
-        AND qa.created_at >= DATETIME('now', '${period}')
+        AND qa.created_at >= TIMESTAMP('now', '${period}')
     `);
     // クエリでデータを取得する部分
     db.all(`
@@ -1285,7 +1285,7 @@ app.post('/api/progress-report', (req, res) => {
         FROM quiz_answers qa
         JOIN quiz_questions qq ON qa.question_id = qq.id
         WHERE qa.user_id = ?
-        AND qa.created_at >= DATETIME('now', ?)
+        AND qa.created_at >= TIMESTAMP('now', ?)
     `, [user_id, period], (err, rows) => {
         if (err) {
             console.error('データベースエラー:', err);
@@ -1301,7 +1301,7 @@ app.post('/api/progress-report', (req, res) => {
             // 空のレポートを生成して progress_reports に挿入する
             db.run(`
                 INSERT INTO progress_reports (user_id, report_date, strengths, weaknesses, suggestions, progress_percentage, created_at)
-                VALUES (?, datetime('now'), ?, ?, ?, ?, datetime('now'))
+                VALUES (?, timestamp('now'), ?, ?, ?, ?, timestamp('now'))
             `, [user_id, 'なし', 'なし', 'データがありません', 0], function(err) {
                 if (err) {
                     console.error('進捗レポートの保存エラー:', err);
@@ -1340,7 +1340,7 @@ app.post('/api/progress-report', (req, res) => {
         // レポートをデータベースに保存
         db.run(`
             INSERT INTO progress_reports (user_id, report_date, strengths, weaknesses, suggestions, progress_percentage, created_at)
-            VALUES (?, datetime('now'), ?, ?, ?, ?, datetime('now'))
+            VALUES (?, timestamp('now'), ?, ?, ?, ?, timestamp('now'))
         `, [user_id, strengths.join(', '), weaknesses.join(', '), suggestions.join(', '), progressPercentage], function(err) {
             if (err) {
                 console.error('進捗レポートの保存エラー:', err);
