@@ -82,15 +82,24 @@ app.use(
 // favicon.icoのリクエストを無視する設定
 app.get('/favicon.ico', (req, res) => res.status(204));
 
-// データベースの接続
-const { Pool } = require('pg');  // PostgreSQLのクライアントを使用
-const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
-});
+// 本番環境でPostgreSQL、ローカル環境でSQLiteを使用
+let db;
+if (process.env.DATABASE_URL) {
+  // 本番環境（Herokuなど）ではPostgreSQLを使用
+  const { Pool } = require('pg');
+  const pool = new Pool({
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT,
+  });
+  db = pool;
+} else {
+  // ローカル開発環境ではSQLiteを使用
+  const sqlite3 = require('sqlite3').verbose();
+  db = new sqlite3.Database('./database.sqlite');  // SQLite接続
+}
 
 // ポート番号の設定
 const port = process.env.PORT || 3000;
