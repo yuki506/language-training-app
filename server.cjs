@@ -220,7 +220,7 @@ async function initializeDatabase() {
         // SQLite用のテーブル作成処理
         db.serialize(() => {
             db.run(`CREATE TABLE IF NOT EXISTS users (
-                user_id SERIAL PRIMAY KEY,
+                user_id SERIAL PRIMARY KEY,
                 username TEXT UNIQUE NOT NULL,
                 password TEXT NOT NULL,
                 gender TEXT,
@@ -229,12 +229,12 @@ async function initializeDatabase() {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )`);
             db.run(`CREATE TABLE IF NOT EXISTS social_stories (
-                id SERIAL PRIMAY KEY,
+                id SERIAL PRIMARY KEY,
                 title TEXT NOT NULL,
                 content TEXT NOT NULL
             )`);
             db.run(`CREATE TABLE IF NOT EXISTS media_files (
-                id SERIAL PRIMAY KEY,
+                id SERIAL PRIMARY KEY,
                 file_name TEXT NOT NULL,
                 file_type TEXT NOT NULL,
                 file_path TEXT NOT NULL,
@@ -276,7 +276,7 @@ async function initializeDatabase() {
             // 進捗管理テーブル
             db.run(`CREATE TABLE IF NOT EXISTS progress (
                 user_id INTEGER,
-                story_id SERIAL PRIMAY KEY,
+                story_id SERIAL PRIMARY KEY,
                 level TEXT DEFAULT '初級',
                 points INTEGER DEFAULT 0,
                 badges TEXT,
@@ -286,7 +286,7 @@ async function initializeDatabase() {
             
             // クイズ質問テーブル
             db.run(`CREATE TABLE IF NOT EXISTS quiz_questions (
-                id SERIAL PRIMAY KEY,
+                id SERIAL PRIMARY KEY,
                 question_id INTEGER,
                 question_text TEXT NOT NULL,
                 category TEXT,
@@ -296,7 +296,7 @@ async function initializeDatabase() {
             
             // ユーザーのクイズ回答履歴
             db.run(`CREATE TABLE IF NOT EXISTS quiz_answers (
-                id SERIAL PRIMAY KEY,
+                id SERIAL PRIMARY KEY,
                 user_id INTEGER,
                 question_id INTEGER,
                 user_answer TEXT NOT NULL,
@@ -306,7 +306,7 @@ async function initializeDatabase() {
 
             //進捗レポート
             db.run(`CREATE TABLE IF NOT EXISTS progress_reports (
-                report_id SERIAL PRIMAY KEY,
+                report_id SERIAL PRIMARY KEY,
                 user_id INTEGER,
                 report_date TIMESTAMP,
                 strengths TEXT,
@@ -385,7 +385,7 @@ async function initializeDatabase() {
             await client.query(`
                 CREATE TABLE IF NOT EXISTS progress (
                 user_id INTEGER,
-                story_id SERIAL PRIMAY KEY,
+                story_id SERIAL PRIMARY KEY,
                 level TEXT DEFAULT '初級',
                 points INTEGER DEFAULT 0,
                 badges TEXT,
@@ -396,7 +396,7 @@ async function initializeDatabase() {
             // クイズ質問テーブル
             await client.query(`
                 CREATE TABLE IF NOT EXISTS quiz_questions (
-                id SERIAL PRIMAY KEY,
+                id SERIAL PRIMARY KEY,
                 question_id INTEGER,
                 question_text TEXT NOT NULL,
                 category TEXT,
@@ -407,7 +407,7 @@ async function initializeDatabase() {
             // ユーザーのクイズ回答履歴
             await client.query(`
                 CREATE TABLE IF NOT EXISTS quiz_answers (
-                id SERIAL PRIMAY KEY,
+                id SERIAL PRIMARY KEY,
                 user_id INTEGER,
                 question_id INTEGER,
                 user_answer TEXT NOT NULL,
@@ -418,7 +418,7 @@ async function initializeDatabase() {
             //進捗レポート
             await client.query(`
                 CREATE TABLE IF NOT EXISTS progress_reports (
-                report_id SERIAL PRIMAY KEY,
+                report_id SERIAL PRIMARY KEY,
                 user_id INTEGER,
                 report_date TIMESTAMP,
                 strengths TEXT,

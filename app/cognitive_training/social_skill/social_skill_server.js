@@ -57,8 +57,8 @@ app.use(express.static('public'));
 app.use('/social-uploads', express.static(uploadsDir1)); // ソーシャルスキル用
 // データベースの初期化いる
 db.serialize(() => {
-    db.run("CREATE TABLE IF NOT EXISTS social_stories (id SERIAL PRIMAY KEY, title TEXT, content TEXT)");
-    db.run("CREATE TABLE IF NOT EXISTS media_files (id SERIAL PRIMAY KEY, file_name TEXT, file_type TEXT, file_path TEXT, created_at D DEFAULT CURRENT_TIMESTAMP)");
+    db.run("CREATE TABLE IF NOT EXISTS social_stories (id SERIAL PRIMARY KEY, title TEXT, content TEXT)");
+    db.run("CREATE TABLE IF NOT EXISTS media_files (id SERIAL PRIMARY KEY, file_name TEXT, file_type TEXT, file_path TEXT, created_at D DEFAULT CURRENT_TIMESTAMP)");
 });
 
 
